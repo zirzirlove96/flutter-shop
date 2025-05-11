@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:shopping_app/constant.dart';
+import 'package:shopping_app/item_details_page.dart';
 import 'package:shopping_app/models/product.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:intl/intl.dart';
@@ -43,8 +45,7 @@ class _ItemListPageState extends State<ItemListPage> {
         productImageUrl: "https://picsum.photos/id/24/200/300",
         price: 24000),
   ];
-  final NumberFormat numberFormat =
-      NumberFormat('###,###,###,###'); //숫자에 대한 포맷형식
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,6 +61,7 @@ class _ItemListPageState extends State<ItemListPage> {
           ),
           itemBuilder: (context, index) {
             return productContainer(
+                productNo: productList[index].productNo!,
                 productName: productList[index].productName!,
                 productImageUrl: productList[index].productImageUrl!,
                 price: productList[index].price!);
@@ -68,43 +70,58 @@ class _ItemListPageState extends State<ItemListPage> {
   }
 
   Widget productContainer(
-      {required String productName,
+      {required int productNo,
+      required String productName,
       required String productImageUrl,
       required double price}) {
-    return Container(
-      padding: const EdgeInsets.all(5),
-      child: Column(
-        children: [
-          CachedNetworkImage(
-            height: 150,
-            fit: BoxFit.cover,
-            imageUrl: productImageUrl,
-            placeholder: (context, url) {
-              return const Center(
-                child: CircularProgressIndicator(strokeWidth: 2), //로딩중~
-              );
-            },
-            errorWidget: (context, url, error) {
-              return const Center(
-                child: Text("오류 발생"),
-              );
-            },
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ItemDetailsPage(
+                productNo: productNo,
+                productName: productName,
+                productImageUrl: productImageUrl,
+                price: price),
           ),
-          Container(
-            padding: const EdgeInsets.all(8),
-            child: Text(
-              productName,
-              style: const TextStyle(fontWeight: FontWeight.bold),
+        );
+      },
+      child: Container(
+        padding: const EdgeInsets.all(5),
+        child: Column(
+          children: [
+            CachedNetworkImage(
+              height: 150,
+              fit: BoxFit.cover,
+              imageUrl: productImageUrl,
+              placeholder: (context, url) {
+                return const Center(
+                  child: CircularProgressIndicator(strokeWidth: 2), //로딩중~
+                );
+              },
+              errorWidget: (context, url, error) {
+                return const Center(
+                  child: Text("오류 발생"),
+                );
+              },
             ),
-          ),
-          Container(
-            padding: const EdgeInsets.all(8),
-            child: Text(
-              "${numberFormat.format(price)}원",
-              style: const TextStyle(fontWeight: FontWeight.bold),
+            Container(
+              padding: const EdgeInsets.all(8),
+              child: Text(
+                productName,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
             ),
-          )
-        ],
+            Container(
+              padding: const EdgeInsets.all(8),
+              child: Text(
+                "${numberFormat.format(price)}원",
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
