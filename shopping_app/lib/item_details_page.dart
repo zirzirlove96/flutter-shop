@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shopping_app/constant.dart';
+import 'package:shopping_app/item_basket_page.dart';
 
 class ItemDetailsPage extends StatefulWidget {
   int productNo;
@@ -74,7 +75,13 @@ class _ItemDetailsPageState extends State<ItemDetailsPage> {
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(20),
         child: FilledButton(
-          onPressed: () {},
+          onPressed: () {
+            //장바구니 담는 로직 추가
+            //장바구니 페이지로 이동
+            Navigator.push(context, MaterialPageRoute(builder: (context) {
+              return const ItemBasketPagee();
+            }));
+          },
           child: const Text("장바구니 담기"),
         ),
       ),
