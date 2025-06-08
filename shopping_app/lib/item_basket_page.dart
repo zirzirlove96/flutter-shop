@@ -38,9 +38,10 @@ class _ItemDetailsPageState extends State<ItemBasketPagee> {
     // TODO: implement initState
     super.initState();
     for (int i = 0; i < basketList.length; i++) {
-      _totalPrice =
+      _totalPrice +=
           basketList[i].price! * quantity[i][basketList[i].productNo]!;
     }
+    print(_totalPrice);
   }
 
   @override
@@ -51,15 +52,23 @@ class _ItemDetailsPageState extends State<ItemBasketPagee> {
         centerTitle: true,
       ),
       body: ListView.builder(
-          itemCount: basketList.length,
-          itemBuilder: (context, index) {
-            return BasketContainer(
-                productNo: basketList[index].productNo!,
-                productName: basketList[index].productName!,
-                productImageUrl: basketList[index].productImageUrl!,
-                price: basketList[index].price!,
-                quantity: quantity[index][basketList[index].productNo]!);
-          }),
+        itemCount: basketList.length,
+        itemBuilder: (context, index) {
+          return BasketContainer(
+              productNo: basketList[index].productNo!,
+              productName: basketList[index].productName!,
+              productImageUrl: basketList[index].productImageUrl!,
+              price: basketList[index].price!,
+              quantity: quantity[index][basketList[index].productNo]!);
+        },
+      ),
+      //결제하기 버튼
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(20),
+        child: FilledButton(
+            onPressed: () {},
+            child: Text("총 ${numberFormat.format(_totalPrice)}원 결제하기")),
+      ),
     );
   }
 
@@ -71,6 +80,7 @@ class _ItemDetailsPageState extends State<ItemBasketPagee> {
       required double price,
       required int quantity}) {
     return Container(
+      padding: const EdgeInsets.all(8),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -93,9 +103,26 @@ class _ItemDetailsPageState extends State<ItemBasketPagee> {
             //장바구니에 넣은 상품의 이름, 가격
             padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Text(productName),
+                Text(
+                  productName,
+                  textScaler: const TextScaler.linear(1.2),
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
                 Text("${numberFormat.format(price)}원"),
+                Row(
+                  children: [
+                    const Text("수량:"),
+                    IconButton(
+                        onPressed: () {}, icon: const Icon(Icons.remove)),
+                    Text("$quantity"),
+                    IconButton(onPressed: () {}, icon: const Icon(Icons.add)),
+                    IconButton(onPressed: () {}, icon: const Icon(Icons.delete))
+                  ],
+                ),
+                Text("합계_: ${numberFormat.format(price * quantity)}")
               ],
             ),
           )
